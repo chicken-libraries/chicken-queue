@@ -1,10 +1,10 @@
-# 🐓 Chicken package
+# 🐓 Chicken Queue
 
 ## About
 
 * * *
 
-Please add relevant information about your package.
+Small lightweight package focused on providing an easy to use API for a classic queue.
 
 ## Tooling information
 
@@ -22,8 +22,8 @@ directory and include the dependency in your project.
 
 ```console
 [wrap-git]
-directory = chicken
-url = https://github.com/chicken-libraries/chicken.git
+directory = chicken-queue
+url = https://github.com/chicken-libraries/chicken-queue.git
 revision = main
 ```
 
@@ -31,10 +31,10 @@ revision = main
 The next step should be to add the package to your Meson project:
 
 ```meson
-chicken = subproject('chicken')
+chicken_queue = subproject('chicken-queue')
 
 executable('prog', files('main.c'),
-    dependencies : [chicken.get_variable('chicken_dep')])
+    dependencies : [chicken_queue.get_variable('chicken_queue_dep')])
 
 ```
 
@@ -50,14 +50,28 @@ library as soon as possible but to learn more please view the API documentation 
 ```c
 #include <stdio.h>
 #include <stdlib.h>
-#include <chicken/package.h>
+#include <chicken/queue.h>
 
 //
 // main is where all good examples start
 //
 int main(void)
 {
-    puts(greet());
+    QueueOf *mQueue = chickenQueueCreate();
+    if (chickenQueueItsEmpty(mQueue))
+    {
+        return EXIT_FAILURE;
+    } // end if
+    chickenQueuePush(mQueue, "hello");
+    chickenQueuePush(mQueue, "crazy");
+    chickenQueuePush(mQueue, "world");
+
+    while (chickenQueueNotEmpty(mQueue))
+    {
+        printf("%s ", chickenQueuePeek(mQueue));
+        chickenQueuePop(mQueue);
+    } // end while
+    chickenQueueErase(&mQueue);
     return EXIT_SUCCESS;
 } // end of function main
 
