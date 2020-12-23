@@ -9,44 +9,110 @@
 // project since its important to test once implementation against a set
 // of common test cases
 //
-#include "chicken/package.h"
+#include "chicken/queue.h"
 #include <unity.h>
+
+QueueOf *queue;
 
 //
 //  project setup teardown functions if needed
 //
 void setUp(void)
 {
-    // TODO.
+    queue = chickenQueueCreate();
 } // end of function setUp
 
 void tearDown(void)
 {
-    // TODO.
+    chickenQueueErase(&queue);
 } // end of function tearDown
 
 //
 // list of all the test cases for this project
 //
-static void test_simpleAssertTrue(void)
+static void test_chickenQueuePush(void)
 {
-    TEST_ASSERT_TRUE(1);
+    TEST_ASSERT_NOT_NULL(queue);
+    chickenQueuePush(queue, "2021");
+    TEST_ASSERT_EQUAL_STRING("2021", chickenQueuePeek(queue));
+
+    chickenQueuePush(queue, "2077");
+    chickenQueuePush(queue, "2010");
+    TEST_ASSERT_EQUAL_STRING("2021", chickenQueuePeek(queue));
 } // end of test case
 
-static void test_simpleAssertNull(void)
+static void test_chickenQueuePush_withNullptr(void)
 {
-    TEST_ASSERT_NULL(NULL);
+    chickenQueuePush(NULL, "2021");
+    TEST_ASSERT_EQUAL_STRING(NULL, chickenQueuePeek(queue));
+
+    chickenQueuePush(NULL, "2077");
+    chickenQueuePush(NULL, "2010");
+    TEST_ASSERT_EQUAL_STRING(NULL, chickenQueuePeek(queue));
 } // end of test case
 
-static void test_simpleAssertCompare(void)
+static void test_chickenQueuePop(void)
 {
-    int dummy = 3;
-    TEST_ASSERT_EQUAL_INT(3, dummy);
+    TEST_ASSERT_NOT_NULL(queue);
+    chickenQueuePush(queue, "red chicken");
+    chickenQueuePush(queue, "blue chicken");
+    chickenQueuePush(queue, "black chicken");
+    chickenQueuePush(queue, "green chicken");
+    chickenQueuePush(queue, "yellow chicken");
+
+    TEST_ASSERT_EQUAL_STRING("red chicken", chickenQueuePeek(queue));
+    chickenQueuePop(queue);
+    TEST_ASSERT_EQUAL_STRING("blue chicken", chickenQueuePeek(queue));
+    chickenQueuePop(queue);
+    TEST_ASSERT_EQUAL_STRING("black chicken", chickenQueuePeek(queue));
+
 } // end of test case
 
-static void test_simpleAssertCall(void)
+static void test_chickenQueuePop_withNullptr(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Hello, C Developer.", greet());
+    chickenQueuePush(NULL, "red chicken");
+    chickenQueuePush(NULL, "blue chicken");
+    chickenQueuePush(NULL, "black chicken");
+
+    TEST_ASSERT_EQUAL_STRING(NULL, chickenQueuePeek(queue));
+    chickenQueuePop(queue);
+    TEST_ASSERT_EQUAL_STRING(NULL, chickenQueuePeek(queue));
+} // end of test case
+
+static void test_chickenQueueItsEmpty(void)
+{
+    TEST_ASSERT_NOT_NULL(queue);
+    TEST_ASSERT_TRUE(chickenQueueItsEmpty(queue));
+    chickenQueuePush(queue, "red chicken");
+    TEST_ASSERT_FALSE(chickenQueueItsEmpty(queue));
+
+    TEST_ASSERT_EQUAL_STRING("red chicken", chickenQueuePeek(queue));
+} // end of test case
+
+static void test_chickenQueueItsEmpty_withNullptr(void)
+{
+    chickenQueuePush(NULL, "red chicken");
+    TEST_ASSERT_TRUE(chickenQueueItsEmpty(queue));
+
+    TEST_ASSERT_EQUAL_STRING(NULL, chickenQueuePeek(queue));
+} // end of test case
+
+static void test_chickenQueueNotEmpty(void)
+{
+    TEST_ASSERT_NOT_NULL(queue);
+    TEST_ASSERT_FALSE(chickenQueueNotEmpty(queue));
+    chickenQueuePush(queue, "red chicken");
+    TEST_ASSERT_TRUE(chickenQueueNotEmpty(queue));
+
+    TEST_ASSERT_EQUAL_STRING("red chicken", chickenQueuePeek(queue));
+} // end of test case
+
+static void test_chickenQueueNotEmpty_withNullptr(void)
+{
+    chickenQueuePush(NULL, "red chicken");
+    TEST_ASSERT_FALSE(chickenQueueNotEmpty(queue));
+
+    TEST_ASSERT_EQUAL_STRING(NULL, chickenQueuePeek(queue));
 } // end of test case
 
 //
@@ -56,10 +122,14 @@ int main(void)
 {
     UNITY_BEGIN();
 
-    RUN_TEST(test_simpleAssertTrue);
-    RUN_TEST(test_simpleAssertNull);
-    RUN_TEST(test_simpleAssertCall);
-    RUN_TEST(test_simpleAssertCompare);
+    RUN_TEST(test_chickenQueuePush);
+    RUN_TEST(test_chickenQueuePop);
+    RUN_TEST(test_chickenQueueItsEmpty);
+    RUN_TEST(test_chickenQueueNotEmpty);
+    RUN_TEST(test_chickenQueuePush_withNullptr);
+    RUN_TEST(test_chickenQueuePop_withNullptr);
+    RUN_TEST(test_chickenQueueItsEmpty_withNullptr);
+    RUN_TEST(test_chickenQueueNotEmpty_withNullptr);
 
     return UNITY_END();
 } // end of function main
