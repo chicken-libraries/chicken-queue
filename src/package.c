@@ -6,7 +6,6 @@
 #include "chicken/queue.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 enum
 {
@@ -23,11 +22,11 @@ enum
 //           data in the structure
 // > [_nextPtr] is the pointer to the next node in the stack
 //
-struct QueueNode
+typedef struct QueueNode
 {
     char *_data;
     struct QueueNode *_nextPtr;
-}; // end of struct
+} QueueNode; // end of struct
 
 //
 // This is the official definition for the Chicken Libraries
@@ -134,7 +133,7 @@ void chickenQueuePush(QueueOf *structurePtr, char *data)
 // Param list:
 // -> [structurePtr]: Pointer to your structure
 //
-QueueNode *chickenQueuePop(QueueOf *structurePtr)
+char *chickenQueuePop(QueueOf *structurePtr)
 {
     if (!structurePtr || !structurePtr->_beginPtr)
     {
@@ -148,11 +147,12 @@ QueueNode *chickenQueuePop(QueueOf *structurePtr)
 
     if (!structurePtr->_beginPtr)
     {
-        return structurePtr->_endPtr = NULL;
+        structurePtr->_endPtr = NULL;
+        return NULL;
     } // end if
     else
     {
-        return temp;
+        return temp->_data;
     } // end else
 } // end of function chickenQueuePop
 

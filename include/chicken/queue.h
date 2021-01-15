@@ -24,7 +24,6 @@
 // targeting c23 standard.
 //
 
-typedef struct QueueNode QueueNode;
 typedef struct QueueOf QueueOf;
 
 //
@@ -39,7 +38,7 @@ CHICKEN_PUBLIC void chickenQueueErase(QueueOf **structureRef);
 //
 
 CHICKEN_PUBLIC void chickenQueuePush(QueueOf *structurePtr, char *data);
-CHICKEN_PUBLIC QueueNode *chickenQueuePop(QueueOf *structurePtr);
+CHICKEN_PUBLIC char *chickenQueuePop(QueueOf *structurePtr);
 CHICKEN_PUBLIC char *chickenQueuePeek(QueueOf *structurePtr);
 CHICKEN_PUBLIC unsigned int chickenQueueItsEmpty(QueueOf *structurePtr);
 CHICKEN_PUBLIC unsigned int chickenQueueNotEmpty(QueueOf *structurePtr);
